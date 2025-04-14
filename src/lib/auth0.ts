@@ -19,7 +19,7 @@ export const auth0 = new Auth0Client({
   async onCallback(error, context, session) {
     // redirect the user to a custom error page
     if (error) {
-      console.error(`Error during Auth0 callback[${session?.user.sub ?? 'unknow'}]:`, error);
+      console.error(`Error during Auth0 callback for [${session?.user.sub ?? 'unknow'}]:`, error);
       return NextResponse.redirect(
         new URL(`/error?error=${error.message}`, process.env.NEXT_PUBLIC_BASE_URL)
       );
