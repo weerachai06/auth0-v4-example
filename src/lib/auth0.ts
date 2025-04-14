@@ -18,6 +18,7 @@ export const auth0 = new Auth0Client({
   },
   authorizationParameters: {
     scope: 'openid profile email offline_access',
+    audience: 'https://weerachai.us.auth0.com/api/v2/',
   },
   async onCallback(error, context, session) {
     // redirect the user to a custom error page
