@@ -16,6 +16,9 @@ export const auth0 = new Auth0Client({
     logout: '/api/auth/logout',
     backChannelLogout: '/api/auth/logout/callback',
   },
+  authorizationParameters: {
+    scope: 'openid profile email offline_access',
+  },
   async onCallback(error, context, session) {
     // redirect the user to a custom error page
     if (error) {
