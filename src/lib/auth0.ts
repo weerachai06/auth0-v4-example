@@ -1,5 +1,5 @@
 import { Auth0Client } from '@auth0/nextjs-auth0/server';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 export const auth0 = new Auth0Client({
   clientId: process.env.AUTH0_CLIENT_ID,
@@ -35,3 +35,25 @@ export const auth0 = new Auth0Client({
     );
   },
 });
+
+async function handleAuth(request: NextRequest) {
+  try {
+    const authResponse = await auth0.middleware(request);
+    return authResponse;
+  } catch (error) {
+    if (
+      error instanceof Error &&
+      (error as { code?: string }).code === 'ERR_JWE_DECRYPTION_FAILED'
+    ) {
+      const returnTo = request.nextUrl.pathname + request.nextUrl.search;
+      const redirectTo = new URL('/api/auth/login', request.url);
+      redirectTo.searchParams.set('returnTo', returnTo);
+      return NextResponse.redirect(new URL(redirectTo.toString(), request.url));
+    }
+    return NextResponse.redirect(new URL('/error', request.url));
+  }
+}
+
+export async function authMiddleware(request: NextRequest) {
+  return handleAuth(request);
+}
