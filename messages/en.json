@@ -1,0 +1,17 @@
+{
+  "Index": {
+    "title": "Hello World!",
+    "description": "This is an internationalized app using next-intl"
+  },
+  "LocaleSwitcher": {
+    "label": "Change language",
+    "locale": "{locale, select, en {English} th {Thai} ja {Japanese} other {Unknown}}"
+  },
+  "Navigation": {
+    "home": "Home",
+    "about": "About",
+    "profile": "Profile",
+    "login": "Login",
+    "logout": "Logout"
+  }
+}

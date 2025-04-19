@@ -1,0 +1,17 @@
+{
+  "Index": {
+    "title": "こんにちは世界！",
+    "description": "これはnext-intlを使用した国際化アプリです"
+  },
+  "LocaleSwitcher": {
+    "label": "言語を変更",
+    "locale": "{locale, select, en {英語} th {タイ語} ja {日本語} other {不明}}"
+  },
+  "Navigation": {
+    "home": "ホーム",
+    "about": "概要",
+    "profile": "プロフィール",
+    "login": "ログイン",
+    "logout": "ログアウト"
+  }
+}

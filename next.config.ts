@@ -1,24 +1,12 @@
 import type { NextConfig } from 'next';
+import createIntlPlugin from 'next-intl/plugin';
+
+const withIntl = createIntlPlugin('./src/i18n.ts');
 
 const nextConfig: NextConfig = {
-  // redirects: async () => {
-  //   return [
-  //     {
-  //       source: "/api/auth/:path*",
-  //       destination: "/auth/:path*",
-  //       permanent: false,
-  //     },
-  //   ];
-  // },
-  // rewrites: async () => {
-  //   return [
-  //     {
-  //       source: '/api/auth/:path*',
-  //       destination: '/auth/:path*',
-  //     },
-  //   ];
-  // },
   /* config options here */
 };
 
 export default nextConfig;
+
+module.exports = withIntl(nextConfig);

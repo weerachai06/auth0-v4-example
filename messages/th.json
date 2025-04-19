@@ -1,0 +1,17 @@
+{
+  "Index": {
+    "title": "สวัสดีชาวโลก!",
+    "description": "นี่คือแอพที่มีหลายภาษาโดยใช้ next-intl"
+  },
+  "LocaleSwitcher": {
+    "label": "เปลี่ยนภาษา",
+    "locale": "{locale, select, en {อังกฤษ} th {ไทย} ja {ญี่ปุ่น} other {ไม่ทราบ}}"
+  },
+  "Navigation": {
+    "home": "หน้าแรก",
+    "about": "เกี่ยวกับ",
+    "profile": "โปรไฟล์",
+    "login": "เข้าสู่ระบบ",
+    "logout": "ออกจากระบบ"
+  }
+}
