@@ -1,7 +1,27 @@
 import { Auth0Client } from '@auth0/nextjs-auth0/server';
+import { SessionData } from '@auth0/nextjs-auth0/types';
 import { NextRequest, NextResponse } from 'next/server';
 
-export const auth0 = new Auth0Client({
+class MyAuth0Client extends Auth0Client {
+  async refreshAccessToken(): Promise<{ token: string; expiresAt: number }> {
+    const existingSession = await this.getSession();
+    if (!existingSession) {
+      throw new Error('The user is not authenticated.');
+    }
+
+    const sessionToForceTokenRefresh = {
+      ...existingSession,
+      tokenSet: {
+        ...existingSession.tokenSet,
+        expiresAt: 0,
+      },
+    } satisfies SessionData;
+    await this.updateSession(sessionToForceTokenRefresh);
+    return this.getAccessToken();
+  }
+}
+
+export const auth0 = new MyAuth0Client({
   clientId: process.env.AUTH0_CLIENT_ID,
   clientSecret: process.env.AUTH0_CLIENT_SECRET,
   appBaseUrl:
@@ -57,3 +77,9 @@ async function handleAuth(request: NextRequest) {
 export async function authMiddleware(request: NextRequest) {
   return handleAuth(request);
 }
+
+export const getLogoutPath = () => {
+  const url = new URL('/api/auth/clear-session', process.env.NEXT_PUBLIC_BASE_URL);
+
+  return url.toString();
+};
