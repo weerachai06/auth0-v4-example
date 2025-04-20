@@ -16,7 +16,6 @@ const intlMiddleware = createI18nMiddleware({
 const protectedRouteMiddleware = async (request: NextRequest) => {
   const sessionData = await auth0.getSession();
   const currentUnixTime = Date.now() / 1000;
-  console.log('dashboard sessionData', sessionData);
 
   const expiresAt = sessionData?.tokenSet.expiresAt ?? 0;
   if (!sessionData?.tokenSet.expiresAt || expiresAt < currentUnixTime) {
