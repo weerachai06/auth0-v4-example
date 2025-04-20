@@ -77,9 +77,6 @@ In the application settings:
 ### 1. Install Dependencies
 
 ```bash
-# Initialize Next.js project (if starting from scratch)
-npx create-next-app auth0-v4-example --typescript
-
 # Install Auth0 SDK and next-intl
 npm install @auth0/nextjs-auth0@v4 next-intl
 ```
