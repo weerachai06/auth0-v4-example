@@ -44,7 +44,6 @@ export function chainMiddleware(configs: MiddlewareConfig[]) {
           const matchFn = createMatcher(matcher);
           // Skip this middleware if the path doesn't match
           if (!matchFn(request.nextUrl.pathname)) {
-            console.log(request.nextUrl.pathname);
             continue;
           }
         }
