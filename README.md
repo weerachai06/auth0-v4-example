@@ -38,3 +38,4 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 [Go to migration guide page](https://github.com/auth0/nextjs-auth0/blob/main/V4_MIGRATION_GUIDE.md)
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# auth0-v4-example
