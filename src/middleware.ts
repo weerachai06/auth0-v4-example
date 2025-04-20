@@ -14,12 +14,18 @@ const intlMiddleware = createI18nMiddleware({
 });
 
 const protectedRouteMiddleware = async (request: NextRequest) => {
-  const sessionData = await auth0.getSession();
-  const currentUnixTime = Date.now() / 1000;
-
-  const expiresAt = sessionData?.tokenSet.expiresAt ?? 0;
-  if (!sessionData?.tokenSet.expiresAt || expiresAt < currentUnixTime) {
-    return NextResponse.redirect(new URL('/api/auth/login', request.url));
+  try {
+    const tokenSet = await auth0.getAccessToken();
+    if (tokenSet.token) {
+      // If the token is available, continue to the next middleware
+      return NextResponse.next();
+    }
+  } catch (error) {
+    console.error('Error getting access token:', error);
+    // Redirect to the login page if the token is not available
+    return NextResponse.redirect(
+      new URL(`/auth/login?returnTo=${request.nextUrl.pathname}`, process.env.NEXT_PUBLIC_BASE_URL)
+    );
   }
 
   return NextResponse.next();
