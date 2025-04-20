@@ -81,8 +81,8 @@ export function chainMiddleware(configs: MiddlewareConfig[]) {
 
         if (finalResponse) {
           // Merge headers from the previous response
-          for (const [key, value] of finalResponse.headers) {
-            response.headers.set(key, value);
+          for (const [key, value] of response.headers) {
+            finalResponse.headers.set(key, value);
           }
         }
         // Store the response
