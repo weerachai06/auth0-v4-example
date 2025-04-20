@@ -165,29 +165,10 @@ export type MiddlewareFunction = (
  * Middleware configuration with matcher options
  */
 export interface MiddlewareConfig {
-  /**
-   * @description The middleware function to execute
-   * @remark
-   * - The middleware function should return a NextResponse or undefined.
-   * - If it returns undefined, the next middleware in the chain will be executed
-   */
   middleware: MiddlewareFunction;
-  /**
-   * @description An optional string or array of strings representing the patterns to match against.
-   * @remark
-   * - If a matcher is provided, the middleware will only be executed if the request path matches one of the patterns.
-   * - The patterns are regular expressions, and the matching is done using the `RegExp` constructor.
-   * - The patterns should be in the format of a regular expression string.
-   * - For example, `'/api/.*'` will match any path that starts with `/api/`.
-   */
   matcher?: string | string[];
 }
 
-/**
- *
- * @param matchers - A string or an array of strings representing the patterns to match against.
- * @returns A function that takes a path and returns true if it matches any of the patterns.
- */
 const createMatcher = (matchers: string | string[]) => {
   // Convert single matcher to array if needed
   const matcherArray = Array.isArray(matchers) ? matchers : [matchers];
@@ -201,25 +182,7 @@ const createMatcher = (matchers: string | string[]) => {
   };
 };
 
-/**
- *
- * @description This function chains multiple middleware functions together, allowing you to apply them in sequence.
- * @param configs - An array of middleware configurations, each containing a middleware function and an optional matcher.
- * @param configs.middleware - The middleware function to execute
- * @param configs.matcher - An optional string or array of strings representing the patterns to match against.
- * @returns A function that takes a NextRequest and returns a NextResponse.
- * @example
- * ```ts
- * export default chainMiddleware([
- *  { middleware: authMiddleware },
- *  { middleware: intlMiddleware, matcher: ['/((?!auth|api).*)'] },
- *  { middleware: protectedRouteMiddleware, matcher: ['/(en|th)/dashboard'] },
- * ]);
- * ```
- * @remark
- * - If a middleware returns a response, it will be used as the final response.
- * - If a middleware doesn't return a response, the next middleware in the chain will be
- */
+
 export function chainMiddleware(configs: MiddlewareConfig[]) {
   return async function handler(
     request: NextRequest,
@@ -313,94 +276,6 @@ export const config = {
     '/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)',
   ],
 };
-```
-
-### 6. Set Up Auth0 API Routes
-
-```typescript
-// src/app/api/auth/[auth0]/route.ts
-import { handleAuth } from '@auth0/nextjs-auth0';
-import { auth0 } from '@/lib/auth0';
-
-export const GET = handleAuth(auth0);
-export const POST = handleAuth(auth0);
-```
-
-### 7. Create i18n Translation Files
-
-```json
-// messages/en.json
-{
-  "LocaleSwitcher": {
-    "label": "Language",
-    "locale": "{locale, select, en {English} th {Thai} ja {Japanese} other {Unknown}}"
-  },
-  "Navigation": {
-    "home": "Home",
-    "dashboard": "Dashboard",
-    "profile": "Profile",
-    "login": "Login",
-    "logout": "Logout"
-  }
-}
-```
-
-Create similar files for other languages (th.json, ja.json).
-
-### 8. Create UI Components
-
-#### Login Button
-
-```tsx
-// src/components/LoginButton.tsx
-'use client';
-
-import { useTranslations } from 'next-intl';
-import Link from 'next-intl/link';
-
-export default function LoginButton({ isAuthenticated }: { isAuthenticated: boolean }) {
-  const t = useTranslations('Navigation');
-  
-  if (isAuthenticated) {
-    return (
-      <Link href="/api/auth/logout" className="btn btn-outline">
-        {t('logout')}
-      </Link>
-    );
-  }
-  
-  return (
-    <Link href="/api/auth/login" className="btn btn-primary">
-      {t('login')}
-    </Link>
-  );
-}
-```
-
-#### Protected Page
-
-```tsx
-// src/app/[locale]/(protected)/dashboard/page.tsx
-import { auth0 } from '@/lib/auth0';
-import { redirect } from 'next/navigation';
-import { useTranslations } from 'next-intl';
-
-export default async function DashboardPage() {
-  const session = await auth0.getSession();
-  
-  if (!session) {
-    redirect('/api/auth/login?returnTo=/dashboard');
-  }
-  
-  const t = useTranslations('Dashboard');
-  
-  return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold">{t('title')}</h1>
-      <p>{t('welcome', { name: session.user.name })}</p>
-    </div>
-  );
-}
 ```
 
 ## Key Features
