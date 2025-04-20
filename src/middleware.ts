@@ -22,9 +22,12 @@ const protectedRouteMiddleware = async (request: NextRequest) => {
     }
   } catch (error) {
     console.error('Error getting access token:', error);
+    const pathname = request.nextUrl.pathname;
+    const searchParams = request.nextUrl.searchParams;
+    const returnTo = `${pathname}${searchParams}`;
     // Redirect to the login page if the token is not available
     return NextResponse.redirect(
-      new URL(`/auth/login?returnTo=${request.nextUrl.pathname}`, process.env.NEXT_PUBLIC_BASE_URL)
+      new URL(`/api/auth/login?returnTo=${returnTo}`, process.env.NEXT_PUBLIC_BASE_URL)
     );
   }
 
