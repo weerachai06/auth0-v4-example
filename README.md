@@ -16,7 +16,7 @@ This project showcases:
 ## Prerequisites
 
 Before you begin, you'll need:
-- Node.js 18.17.0 or later
+- Node.js 18.17.0 or higher
 - An Auth0 account
 - Basic knowledge of Next.js and React
 
