@@ -33,6 +33,25 @@ const createMatcher = (matchers: string | string[]) => {
   };
 };
 
+/**
+ *
+ * @description This function chains multiple middleware functions together, allowing you to apply them in sequence.
+ * @param configs - An array of middleware configurations, each containing a middleware function and an optional matcher.
+ * @param configs.middleware - The middleware function to execute
+ * @param configs.matcher - An optional string or array of strings representing the patterns to match against.
+ * @returns A function that takes a NextRequest and returns a NextResponse.
+ * @example
+ * ```ts
+ * export default chainMiddleware([
+ *  { middleware: authMiddleware },
+ *  { middleware: intlMiddleware, matcher: ['/((?!auth|api).*)'] },
+ *  { middleware: protectedRouteMiddleware, matcher: ['/(en|th)/dashboard'] },
+ * ]);
+ * ```
+ * @remark
+ * - If a middleware returns a response, it will be used as the final response.
+ * - If a middleware doesn't return a response, the next middleware in the chain will be
+ */
 export function chainMiddleware(configs: MiddlewareConfig[]) {
   return async function handler(request: NextRequest): Promise<NextResponse> {
     let finalResponse: NextResponse | null = null;
