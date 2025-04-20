@@ -5,6 +5,18 @@ import { SessionData } from '@auth0/nextjs-auth0/types';
 import Link from 'next/link';
 import LanguageSwitcher from '../_components/LanguageSwitcher';
 
+const getLoginUrl = (returnTo: string = '/') => {
+  const url = new URL('/api/auth/login', process.env.NEXT_PUBLIC_BASE_URL);
+  url.searchParams.set('returnTo', returnTo);
+  return url.toString();
+};
+
+const getLogoutUrl = () => {
+  const url = new URL('/api/auth/logout', process.env.NEXT_PUBLIC_BASE_URL);
+  url.searchParams.set('returnTo', `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/clear-session`);
+  return url.toString();
+};
+
 export default async function Home() {
   // Get user session
   const session = await auth0.getSession();
@@ -18,14 +30,14 @@ export default async function Home() {
             <LanguageSwitcher />
             {session?.user ? (
               <a
-                href="/api/auth/logout?returnTo=http://localhost:3000/api/auth/clear-session"
+                href={getLogoutUrl()}
                 className="text-sm px-3 py-2 bg-red-600 text-white rounded hover:bg-red-700"
               >
                 Logout
               </a>
             ) : (
               <a
-                href="/api/auth/login"
+                href={getLoginUrl()}
                 className="text-sm px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
               >
                 Login
