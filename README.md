@@ -2,6 +2,32 @@
 
 This guide demonstrates how to integrate Auth0 authentication with Next.js App Router, internationalization, and protected routes.
 
+## Table of Contents
+- [Next.js Auth0 v4 Integration Guide](#nextjs-auth0-v4-integration-guide)
+  - [Table of Contents](#table-of-contents)
+  - [Overview](#overview)
+  - [Prerequisites](#prerequisites)
+  - [Auth0 Setup](#auth0-setup)
+    - [1. Create an Auth0 Application](#1-create-an-auth0-application)
+    - [2. Configure Auth0 Application Settings](#2-configure-auth0-application-settings)
+    - [3. Create an API (Optional, for Access Tokens)](#3-create-an-api-optional-for-access-tokens)
+  - [Project Setup](#project-setup)
+    - [1. Install Dependencies](#1-install-dependencies)
+    - [2. Environment Configuration](#2-environment-configuration)
+    - [3. Create Custom Auth0 Client](#3-create-custom-auth0-client)
+    - [4. Create Middleware Chain Helper](#4-create-middleware-chain-helper)
+    - [5. Configure App Middleware](#5-configure-app-middleware)
+  - [Key Features](#key-features)
+    - [Protected Routes](#protected-routes)
+    - [Token Management](#token-management)
+    - [Internationalization](#internationalization)
+    - [Error Handling](#error-handling)
+  - [Troubleshooting](#troubleshooting)
+    - [Session Not Found](#session-not-found)
+    - [Middleware Not Running](#middleware-not-running)
+    - [Token Refresh Issues](#token-refresh-issues)
+  - [Additional Resources](#additional-resources)
+
 ## Overview
 
 This project showcases:
