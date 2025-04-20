@@ -1,6 +1,6 @@
 import createI18nMiddleware from 'next-intl/middleware';
-import { type NextRequest } from 'next/server';
-import { auth0 } from './lib/auth0';
+import { authMiddleware } from './lib/auth0';
+import { chainMiddleware } from './middlewares/chain-middleware';
 
 // Supported languages
 const locales = ['en', 'th', 'ja'];
@@ -12,19 +12,19 @@ const intlMiddleware = createI18nMiddleware({
   defaultLocale,
 });
 
-export async function middleware(request: NextRequest) {
-  const authResponse = await auth0.middleware(request);
+const middleware = chainMiddleware([
+  {
+    // Auth middleware - apply to all except API routes
+    middleware: authMiddleware,
+  },
+  {
+    // i18n middleware - apply to all except API routes
+    middleware: intlMiddleware,
+    matcher: ['^(?!.*/api/).*$'],
+  },
+]);
 
-  // call any other middleware here
-  const intlRes = intlMiddleware(request);
-
-  // add any headers from auth to the response
-  for (const [key, value] of authResponse.headers) {
-    intlRes.headers.set(key, value);
-  }
-
-  return intlRes;
-}
+export default middleware;
 
 export const config = {
   matcher: [
