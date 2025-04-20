@@ -2,6 +2,11 @@ import { Auth0Client } from '@auth0/nextjs-auth0/server';
 import { SessionData } from '@auth0/nextjs-auth0/types';
 import { NextRequest, NextResponse } from 'next/server';
 
+/**
+ * Now, we need to extend the Auth0Client class to add a custom refreshAccessToken method.
+ * This method will force a refresh of the access token by setting the expiresAt property to 0.
+ * @see {@link https://github.com/auth0/nextjs-auth0/issues/1884#issuecomment-2641728576}
+ */
 class MyAuth0Client extends Auth0Client {
   async refreshAccessToken(): Promise<{ token: string; expiresAt: number }> {
     const existingSession = await this.getSession();
