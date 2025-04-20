@@ -11,10 +11,24 @@ export type MiddlewareFunction = (
 /**
  * Middleware configuration with matcher options
  */
-export type MiddlewareConfig = {
+export interface MiddlewareConfig {
+  /**
+   * @description The middleware function to execute
+   * @remark
+   * - The middleware function should return a NextResponse or undefined.
+   * - If it returns undefined, the next middleware in the chain will be executed
+   */
   middleware: MiddlewareFunction;
+  /**
+   * @description An optional string or array of strings representing the patterns to match against.
+   * @remark
+   * - If a matcher is provided, the middleware will only be executed if the request path matches one of the patterns.
+   * - The patterns are regular expressions, and the matching is done using the `RegExp` constructor.
+   * - The patterns should be in the format of a regular expression string.
+   * - For example, `'/api/.*'` will match any path that starts with `/api/`.
+   */
   matcher?: string | string[];
-};
+}
 
 /**
  *
