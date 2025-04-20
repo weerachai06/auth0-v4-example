@@ -1,10 +1,11 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextFetchEvent, NextRequest, NextResponse } from 'next/server';
 
 /**
  * Middleware function type
  */
 export type MiddlewareFunction = (
-  request: NextRequest
+  request: NextRequest,
+  event?: NextFetchEvent
 ) => Promise<NextResponse | undefined> | NextResponse | undefined;
 
 /**
@@ -53,7 +54,10 @@ const createMatcher = (matchers: string | string[]) => {
  * - If a middleware doesn't return a response, the next middleware in the chain will be
  */
 export function chainMiddleware(configs: MiddlewareConfig[]) {
-  return async function handler(request: NextRequest): Promise<NextResponse> {
+  return async function handler(
+    request: NextRequest,
+    event: NextFetchEvent
+  ): Promise<NextResponse> {
     let finalResponse: NextResponse | null = null;
 
     for (const { middleware, matcher } of configs) {
@@ -68,7 +72,7 @@ export function chainMiddleware(configs: MiddlewareConfig[]) {
         }
 
         // Execute the current middleware
-        const response = await middleware(request);
+        const response = await middleware(request, event);
 
         // If middleware didn't return a response, continue to next
         if (!response) {
