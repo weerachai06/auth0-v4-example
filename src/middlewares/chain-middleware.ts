@@ -33,23 +33,8 @@ const createMatcher = (matchers: string | string[]) => {
   };
 };
 
-const createNextRequest = (request: NextRequest, response: NextResponse) => {
-  for (const [key, value] of response.headers) {
-    request.headers.set(key, value);
-  }
-
-  const newRequest = new NextRequest(request.url, {
-    method: request.method,
-    headers: request.headers,
-    body: request.body,
-  });
-
-  return newRequest;
-};
-
 export function chainMiddleware(configs: MiddlewareConfig[]) {
   return async function handler(request: NextRequest): Promise<NextResponse> {
-    let currentRequest = request;
     let finalResponse: NextResponse | null = null;
 
     for (const { middleware, matcher } of configs) {
@@ -65,18 +50,21 @@ export function chainMiddleware(configs: MiddlewareConfig[]) {
         }
 
         // Execute the current middleware
-        const response = await middleware(currentRequest);
+        const response = await middleware(request);
 
         // If middleware didn't return a response, continue to next
         if (!response) {
           continue;
         }
 
+        if (finalResponse) {
+          // Merge headers from the previous response
+          for (const [key, value] of finalResponse.headers) {
+            response.headers.set(key, value);
+          }
+        }
         // Store the response
         finalResponse = response;
-
-        // Create a new request with merged headers for next middleware
-        currentRequest = createNextRequest(request, response);
       } catch (error) {
         console.error('Error in middleware:', error);
       }
