@@ -8,6 +8,7 @@ export default async function ProfilePage() {
   return (
     <div className="container mx-auto py-8 px-4">
       <a href={redirectTo}>Logout</a>
+      {/* <ClientComponent accessTokenPromise={accessToken} /> */}
     </div>
   );
 }

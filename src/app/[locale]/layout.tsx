@@ -1,4 +1,6 @@
 import '@/app/globals.css';
+import { auth0 } from '@/lib/auth0';
+import { Auth0Provider } from '@auth0/nextjs-auth0';
 import type { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
@@ -32,6 +34,7 @@ export default async function LocaleLayout({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
+  const session = await auth0.getSession();
   // Validate the locale
   if (!locales.includes(locale)) notFound();
 
@@ -41,9 +44,11 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <NextIntlClientProvider locale={locale} messages={messages}>
-          {children}
-        </NextIntlClientProvider>
+        <Auth0Provider user={session?.user}>
+          <NextIntlClientProvider locale={locale} messages={messages}>
+            {children}
+          </NextIntlClientProvider>
+        </Auth0Provider>
       </body>
     </html>
   );

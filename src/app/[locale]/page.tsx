@@ -1,26 +1,13 @@
 import { auth0 } from '@/lib/auth0';
 import { useTranslations } from 'next-intl';
-// import { getTranslator } from 'next-intl/server';
+
+import { SessionData } from '@auth0/nextjs-auth0/types';
 import Link from 'next/link';
 import LanguageSwitcher from '../_components/LanguageSwitcher';
 
-// export async function generateMetadata({ params: { locale } }: { params: { locale: string } }) {
-//   const t = await getTranslator(locale, 'Index');
-
-//   return {
-//     title: t('title'),
-//     description: t('description'),
-//   };
-// }
-
 export default async function Home() {
   // Get user session
-  let session = null;
-  try {
-    session = await auth0.getSession();
-  } catch (error) {
-    console.error('Failed to get session:', error);
-  }
+  const session = await auth0.getSession();
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -30,19 +17,19 @@ export default async function Home() {
           <div className="flex items-center space-x-4">
             <LanguageSwitcher />
             {session?.user ? (
-              <Link
-                href="/api/auth/logout"
+              <a
+                href="/api/auth/logout?returnTo=http://localhost:3000/api/auth/clear-session"
                 className="text-sm px-3 py-2 bg-red-600 text-white rounded hover:bg-red-700"
               >
                 Logout
-              </Link>
+              </a>
             ) : (
-              <Link
+              <a
                 href="/api/auth/login"
                 className="text-sm px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
               >
                 Login
-              </Link>
+              </a>
             )}
           </div>
         </div>
@@ -64,7 +51,7 @@ export default async function Home() {
 }
 
 // Separate client component for translations
-function IntlHome({ user }: { user?: any }) {
+function IntlHome({ user }: { user?: SessionData['user'] }) {
   const t = useTranslations('Index');
   const nav = useTranslations('Navigation');
 

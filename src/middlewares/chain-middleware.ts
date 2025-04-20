@@ -20,95 +20,69 @@ export type MiddlewareConfig = {
  * @param matchers - A string or an array of strings representing the patterns to match against.
  * @returns A function that takes a path and returns true if it matches any of the patterns.
  */
-export const createMatcher = (matchers: string | string[]) => {
+const createMatcher = (matchers: string | string[]) => {
   // Convert single matcher to array if needed
   const matcherArray = Array.isArray(matchers) ? matchers : [matchers];
 
   // Create RegExp objects from matcher strings
-  const patterns = matcherArray.map(matcher => new RegExp(matcher));
+  const patterns = matcherArray.map(matcher => new RegExp(`^${matcher}$`));
 
   // Function that tests a path against all patterns
   return (path: string): boolean => {
-    return patterns.some(pattern => pattern.test(path));
+    return patterns.every(pattern => pattern.test(path));
   };
 };
 
-/**
- * Merges headers from two responses
- */
-export function mergeHeaders(target: NextResponse, source: NextResponse): NextResponse {
-  // Create a new response with the target's properties
-  const mergedResponse = NextResponse.next({
-    status: target.status,
-    statusText: target.statusText,
-    headers: new Headers(target.headers),
-  });
-
-  // Add headers from source that don't exist in target
-  for (const [key, value] of source.headers) {
-    if (!mergedResponse.headers.has(key)) {
-      mergedResponse.headers.set(key, value);
-    }
+const createNextRequest = (request: NextRequest, response: NextResponse) => {
+  for (const [key, value] of response.headers) {
+    request.headers.set(key, value);
   }
 
-  return mergedResponse;
-}
-
-/**
- * Creates a request from a response to pass to the next middleware
- */
-export function createNextRequest(request: NextRequest, response: NextResponse): NextRequest {
-  const headers = new Headers(response.headers);
-
-  return new NextRequest(request.url, {
+  const newRequest = new NextRequest(request.url, {
     method: request.method,
-    headers: headers,
-    body: response.body,
+    headers: request.headers,
+    body: request.body,
   });
-}
 
-/**
- * Chains multiple middleware functions with matcher support
- */
+  return newRequest;
+};
+
 export function chainMiddleware(configs: MiddlewareConfig[]) {
-  return async function (request: NextRequest): Promise<NextResponse> {
-    let currentRequest: NextRequest = request;
-    let lastResponse: NextResponse | undefined;
+  return async function handler(request: NextRequest): Promise<NextResponse> {
+    let currentRequest = request;
+    let finalResponse: NextResponse | null = null;
 
     for (const { middleware, matcher } of configs) {
       try {
-        // Skip middleware if matcher doesn't match
+        // If there's a matcher defined, check if the path matches
         if (matcher) {
           const matchFn = createMatcher(matcher);
+          // Skip this middleware if the path doesn't match
           if (!matchFn(request.nextUrl.pathname)) {
+            console.log(request.nextUrl.pathname);
             continue;
           }
         }
 
-        // Execute the middleware with current request
+        // Execute the current middleware
         const response = await middleware(currentRequest);
 
-        // If middleware didn't return a response, continue with unchanged request
+        // If middleware didn't return a response, continue to next
         if (!response) {
           continue;
         }
 
-        // Keep track of the last response
-        if (!lastResponse) {
-          lastResponse = response;
-        } else {
-          // Merge the current response with the last one
-          lastResponse = mergeHeaders(response, lastResponse);
-        }
+        // Store the response
+        finalResponse = response;
 
-        // Update the request for the next middleware
+        // Create a new request with merged headers for next middleware
         currentRequest = createNextRequest(request, response);
       } catch (error) {
-        console.error('Middleware error:', error);
+        console.error('Error in middleware:', error);
       }
     }
 
-    // Return the final merged response or a default next response
-    return lastResponse || NextResponse.next();
+    // Return the final response or default to NextResponse.next()
+    return finalResponse || NextResponse.next();
   };
 }
