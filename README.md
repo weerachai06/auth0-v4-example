@@ -9,7 +9,6 @@ This monorepo is organized as follows:
 
 - **apps/**
   - **web/** - Main Next.js application with Auth0 integration
-  - **docs/** - Documentation site
 
 - **packages/**
   - **ui/** - Shared UI components
@@ -30,26 +29,6 @@ pnpm dev
 
 # Build all applications
 pnpm build
-```
-
-## Project Structure
-
-```
-apps/web/
-├── app/                 # App Router directory
-│   ├── [locale]/        # Localized routes
-│   │   ├── page.tsx     # Homepage
-│   │   └── layout.tsx   # Root layout
-│   ├── api/             # API routes
-│   │   └── auth/        # Auth0 API routes
-│   └── globals.css      # Global styles
-├── components/          # React components
-├── lib/                 # Utility functions
-│   ├── auth0.ts         # Auth0 client setup
-│   └── i18n.ts          # i18n configuration
-├── middleware.ts        # Combined middleware
-├── public/              # Static assets
-└── README.md            # This file
 ```
 
 ## Authentication Flow
