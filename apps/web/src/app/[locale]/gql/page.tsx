@@ -70,6 +70,25 @@ export default function GqlTadaExample() {
         </div>
       )}
 
+      {data && (
+        <div className="bg-white shadow-md rounded p-4">
+          {/* <h2 className="text-xl font-semibold mb-4">Countries in {data.continent.name}</h2> */}
+          <ul>
+            {data.continent?.countries.map((country: any) => (
+              <li key={country.code} className="mb-2">
+                <strong>{country.name}</strong> - Capital: {country.capital}, Currency:{' '}
+                {country.currency}
+                <ul>
+                  {country.languages.map((lang: any) => (
+                    <li key={lang.code}>{lang.name}</li>
+                  ))}
+                </ul>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       {/* CSS for the loader */}
       <style jsx>{`
         .loader {
