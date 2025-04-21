@@ -1,84 +1,113 @@
-# Turborepo starter
 
-This Turborepo starter is maintained by the Turborepo core team.
+# Auth0 v4 with Next.js App Router
 
-## Using this example
+This project is a monorepo containing multiple applications and packages. For detailed information about the Next.js application with Auth0 integration, please refer to the web application README.
 
-Run the following command:
+## Repository Structure
 
-```sh
-npx create-turbo@latest
-```
+This monorepo is organized as follows:
 
-## What's inside?
+- **apps/**
+  - **web/** - Main Next.js application with Auth0 integration
+  - **docs/** - Documentation site
 
-This Turborepo includes the following packages/apps:
+- **packages/**
+  - **ui/** - Shared UI components
+  - **auth/** - Auth0 integration utilities
+  - **eslint-config/** - Shared ESLint configuration
+  - **typescript-config/** - Shared TypeScript configuration
 
-### Apps and Packages
+## Development
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@weerachai06/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@weerachai06/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@weerachai06/typescript-config`: `tsconfig.json`s used throughout the monorepo
+To get started with development:
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+```bash
+# Install dependencies
+pnpm install
 
-### Utilities
+# Run all applications
+pnpm dev
 
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-```
-cd my-turborepo
+# Build all applications
 pnpm build
 ```
 
-### Develop
-
-To develop all apps and packages, run the following command:
+## Project Structure
 
 ```
-cd my-turborepo
-pnpm dev
+apps/web/
+├── app/                 # App Router directory
+│   ├── [locale]/        # Localized routes
+│   │   ├── page.tsx     # Homepage
+│   │   └── layout.tsx   # Root layout
+│   ├── api/             # API routes
+│   │   └── auth/        # Auth0 API routes
+│   └── globals.css      # Global styles
+├── components/          # React components
+├── lib/                 # Utility functions
+│   ├── auth0.ts         # Auth0 client setup
+│   └── i18n.ts          # i18n configuration
+├── middleware.ts        # Combined middleware
+├── public/              # Static assets
+└── README.md            # This file
 ```
 
-### Remote Caching
+## Authentication Flow
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+This application implements a complete authentication flow with Auth0:
 
-Turborepo can use a technique known as [Remote Caching](https://turbo.build/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+1. **Login**: Users are directed to Auth0 for authentication
+2. **Callback**: Auth0 redirects to our callback endpoint
+3. **Session Management**: Server-side session with refresh token rotation
+4. **Protected Routes**: Middleware-based route protection
+5. **Role-based Access**: Different content based on user roles
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
+## Middleware Implementation
 
+Authentication is implemented using middleware chains:
+
+```typescript
+// middleware.ts
+import { chainMiddleware } from "@weerachai06/auth";
+import { authMiddleware } from "./lib/auth0";
+import { i18nMiddleware } from "./lib/i18n";
+
+export default chainMiddleware([
+  { middleware: i18nMiddleware },
+  { middleware: authMiddleware },
+]);
+
+export const config = {
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+};
 ```
-cd my-turborepo
-npx turbo login
-```
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+## Security Features
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+This app is regularly scanned for vulnerabilities with:
+- CodeQL for code analysis
+- Snyk for dependency scanning
+- ESLint security plugins
+- TruffleHog for secrets detection
 
-```
-npx turbo link
-```
+## Resources
 
-## Useful Links
+- [Auth0 Next.js SDK Documentation](https://auth0.com/docs/quickstart/webapp/nextjs)
+- [Next.js Documentation](https://nextjs.org/docs)
+- [next-intl Documentation](https://next-intl-docs.vercel.app/)
 
-Learn more about the power of Turborepo:
 
-- [Tasks](https://turbo.build/docs/core-concepts/monorepos/running-tasks)
-- [Caching](https://turbo.build/docs/core-concepts/caching)
-- [Remote Caching](https://turbo.build/docs/core-concepts/remote-caching)
-- [Filtering](https://turbo.build/docs/core-concepts/monorepos/filtering)
-- [Configuration Options](https://turbo.build/docs/reference/configuration)
-- [CLI Usage](https://turbo.build/docs/reference/command-line-reference)
+## Security
+
+This repository has automated security scanning with GitHub Actions. For more information about the security features, refer to the web application README.
+
+## Continuous Integration
+
+This project uses GitHub Actions for:
+- Dependency installation and caching
+- Security scanning with CodeQL
+- Linting and type checking
+
+## License
+
+MIT
