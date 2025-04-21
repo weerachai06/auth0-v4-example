@@ -26,18 +26,18 @@ jobs:
         uses: pnpm/action-setup@v4
         with:
           version: 10.6.2
-          run_install: false
 
-      # Remove this entire cache block
+      # Cache with version control
       - name: Cache pnpm dependencies
         uses: actions/cache@v3
         with:
           path: |
             ~/.pnpm-store
             node_modules
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          # Adding a cache version (v1) to easily invalidate when needed
+          key: ${{ runner.os }}-pnpm-cache-v1-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
-            ${{ runner.os }}-pnpm-
+            ${{ runner.os }}-pnpm-cache-v1-
 
       # Install dependencies with fresh setup
       - name: Install dependencies
