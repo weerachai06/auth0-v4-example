@@ -1,4 +1,5 @@
 name: 'Security Scanning'
+run-name: 'Security Scan for ${{ github.event_name }}'
 
 on:
   push:
@@ -11,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       # Set up Node.js with Corepack enabled
       - name: Setup Node.js
