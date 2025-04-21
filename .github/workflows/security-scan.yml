@@ -13,31 +13,29 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # First set up Node.js explicitly
+      # Set up Node.js with Corepack enabled
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20.11.0'
-          # Remove cache reference
-          # cache: 'pnpm'
 
-      # Then set up PNPM after Node.js
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10.6.2
+      # Enable Corepack to manage package managers
+      - name: Enable Corepack
+        run: |
+          corepack enable
+          corepack prepare pnpm@10.6.2 --activate
 
       # Cache with version control
-      - name: Cache pnpm dependencies
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.pnpm-store
-            node_modules
-          # Adding a cache version (v1) to easily invalidate when needed
-          key: ${{ runner.os }}-pnpm-cache-v1-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-cache-v1-
+      # - name: Cache pnpm dependencies
+      #   uses: actions/cache@v3
+      #   with:
+      #     path: |
+      #       ~/.pnpm-store
+      #       node_modules
+      #     # Adding a cache version (v2) to start fresh
+      #     key: ${{ runner.os }}-pnpm-cache-v2-${{ hashFiles('**/pnpm-lock.yaml') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-pnpm-cache-v2-
 
       # Install dependencies with fresh setup
       - name: Install dependencies
