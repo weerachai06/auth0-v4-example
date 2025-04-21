@@ -1,5 +1,5 @@
 name: 'Security Scanning'
-run-name: 'Security Scan for ${{ github.event_name }}'
+run-name: 'Security Scan for ${{ github.event_name }}(${{ github.ref_name }})'
 
 on:
   push:
