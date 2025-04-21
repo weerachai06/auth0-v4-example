@@ -1,0 +1,24 @@
+{
+  "folders": [
+    {
+      "name": "AUTH0 WEB",
+      "path": "./apps/web",
+    },
+    {
+      "name": "ESLint",
+      "path": "./packages/eslint-config",
+    },
+    {
+      "name": "UI",
+      "path": "./packages/ui",
+    },
+    {
+      "name": "TS",
+      "path": "./packages/typescript-config",
+    },
+    {
+      "name": "Root",
+      "path": "./",
+    },
+  ],
+}
