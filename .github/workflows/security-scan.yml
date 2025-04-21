@@ -9,23 +9,24 @@ on:
 jobs:
   security-scan:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ['20.11.0']
 
     steps:
       - uses: actions/checkout@v4
 
       # First set up Node.js explicitly to LTS version
-      - name: Setup Node.js
+      - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
-          cache: 'none'
-          node-version: 20.11.0 # LTS version that's fully compatible with pnpm
+          node-version: ${{ matrix.node-version }} # LTS version that's fully compatible with pnpm
 
       # Then set up PNPM after Node.js
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 10.6.2
-          run_install: false
 
       # Install dependencies with verbose flag to see more details
       - name: Install dependencies
