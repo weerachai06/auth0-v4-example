@@ -5,48 +5,54 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
-  # schedule:
-  #   - cron: '0 8 * * 1' # Run once a week on Monday
 
 jobs:
   security-scan:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: ['20.11.0']
 
     steps:
       - uses: actions/checkout@v4
 
-      # Improved PNPM setup
+      # First set up Node.js explicitly to LTS version
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.11.0 # LTS version that's fully compatible with pnpm
+
+      # Then set up PNPM after Node.js
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 10.6.2
-          run_install: false # Important: don't run install yet
+          run_install: false
 
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+      # Manually set up caching
+      - name: Cache pnpm dependencies
+        uses: actions/cache@v3
         with:
-          node-version: ${{ matrix.node-version }}
-          # Remove the cache line that's causing the issue
-          # cache: 'pnpm'
+          path: |
+            ~/.pnpm-store
+            node_modules
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
 
+      # Install dependencies with verbose flag to see more details
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --no-frozen-lockfile
 
       # pnpm audit - Check for package vulnerabilities
       - name: Run pnpm audit
         run: pnpm audit --audit-level=high
 
-      # ESLint security plugins check - use pnpm instead of npx
+      # ESLint security plugins check
       - name: Run ESLint
         run: pnpm eslint . --ext .js,.jsx,.ts,.tsx
 
       # Dependency scanning
       - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/node@master
-        continue-on-error: true # To not fail the build
+        continue-on-error: true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
@@ -61,6 +67,6 @@ jobs:
           head: HEAD
           extra_args: --debug --only-verified
 
-      # Update to v3 as v2 is deprecated
+      # CodeQL Analysis
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
