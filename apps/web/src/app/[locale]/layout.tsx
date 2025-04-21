@@ -1,11 +1,11 @@
 import '@/app/globals.css';
-import { auth0 } from '@/lib/auth0';
 import { Auth0Provider } from '@auth0/nextjs-auth0';
 import type { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { notFound } from 'next/navigation';
+import { getSafeSession } from './actions';
 
 // Font setup
 const geistSans = Geist({
@@ -34,7 +34,7 @@ export default async function LocaleLayout({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const session = await auth0.getSession();
+  const session = await getSafeSession();
   // Validate the locale
   if (!locales.includes(locale)) notFound();
 

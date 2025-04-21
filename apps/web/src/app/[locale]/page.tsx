@@ -1,9 +1,9 @@
-import { auth0 } from '@/lib/auth0';
 import { useTranslations } from 'next-intl';
 
 import { SessionData } from '@auth0/nextjs-auth0/types';
 import Link from 'next/link';
 import LanguageSwitcher from '../_components/LanguageSwitcher';
+import { getSafeSession } from './actions';
 
 const getLoginUrl = (returnTo: string = '/') => {
   const url = new URL('/api/auth/login', process.env.NEXT_PUBLIC_BASE_URL);
@@ -19,7 +19,7 @@ const getLogoutUrl = () => {
 
 export default async function Home() {
   // Get user session
-  const session = await auth0.getSession();
+  const session = await getSafeSession();
 
   return (
     <div className="min-h-screen flex flex-col">

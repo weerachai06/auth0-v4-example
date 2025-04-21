@@ -66,12 +66,9 @@ async function handleAuth(request: NextRequest) {
     const authResponse = await auth0.middleware(request);
     return authResponse;
   } catch (error) {
-    if (
-      error instanceof Error &&
-      (error as { code?: string }).code === 'ERR_JWE_DECRYPTION_FAILED'
-    ) {
+    if (error instanceof Error) {
       const returnTo = request.nextUrl.pathname + request.nextUrl.search;
-      const redirectTo = new URL('/api/auth/login', request.url);
+      const redirectTo = new URL('/api/auth/logout', request.url);
       redirectTo.searchParams.set('returnTo', returnTo);
       return NextResponse.redirect(new URL(redirectTo.toString(), request.url));
     }

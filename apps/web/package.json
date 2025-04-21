@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -31,10 +31,5 @@
     "typescript": "^5",
     "@weerachai06/eslint-config": "workspace:*",
     "@weerachai06/typescript-config": "workspace:*"
-  },
-  "packageManager": "pnpm@10.6.2",
-  "engines": {
-    "node": "20.11.0",
-    "pnpm": "10.6.2"
   }
 }
