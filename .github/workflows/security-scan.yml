@@ -11,22 +11,28 @@ on:
 jobs:
   security-scan:
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    strategy:
+      matrix:
+        node-version: [20]
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          version: 10.6.2
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: npm ci
-
-      # npm audit - Check for package vulnerabilities
-      - name: Run npm audit
-        run: npm audit --audit-level=high
+        run: pnpm install
+      # pnpm audit - Check for package vulnerabilities
+      - name: Run pnpm audit
+        run: pnpm audit --audit-level=high
 
       # ESLint security plugins check
       - name: Run ESLint
