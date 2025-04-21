@@ -30,7 +30,7 @@ jobs:
 
       # Install dependencies with verbose flag to see more details
       - name: Install dependencies
-        run: pnpm install --no-frozen-lockfile
+        run: pnpm install
 
       # pnpm audit - Check for package vulnerabilities
       - name: Run pnpm audit
