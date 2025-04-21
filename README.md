@@ -12,7 +12,6 @@ This monorepo is organized as follows:
 
 - **packages/**
   - **ui/** - Shared UI components
-  - **auth/** - Auth0 integration utilities
   - **eslint-config/** - Shared ESLint configuration
   - **typescript-config/** - Shared TypeScript configuration
 
