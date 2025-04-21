@@ -28,7 +28,6 @@
     "tailwindcss": "^4",
     "typescript": "^5"
   },
-  "packageManager": "pnpm@10.6.2",
   "engines": {
     "node": "20.11.0"
   }
