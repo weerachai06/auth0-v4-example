@@ -6,7 +6,7 @@
         "name": "next"
       },
       {
-        "name": "gql.tada/ts-plugin",
+        "name": "@0no-co/graphqlsp",
         "schema": "./src/lib/graphql/schema.graphql",
         "tadaOutputLocation": "./src/lib/graphql/graphql-env.d.ts"
       }

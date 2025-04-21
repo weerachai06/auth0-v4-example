@@ -7,13 +7,15 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "generate:graphql": "tsx src/scripts/codegen.mts",
-    "generate:schema": "graphql-codegen --config src/scripts/zod-generator.ts",
+    "generate:schema": "tsx src/scripts/codegen.mts",
+    "generate:zod": "graphql-codegen --config src/scripts/zod-generator.ts",
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^4.4.2",
+    "@urql/next": "^1.1.5",
     "@weerachai06/ui": "workspace:*",
+    "gql.tada": "^1.8.10",
     "next": "15.3.0",
     "next-intl": "^4.0.2",
     "react": "^19.0.0",
@@ -21,6 +23,7 @@
     "zod": "^3.24.3"
   },
   "devDependencies": {
+    "@0no-co/graphqlsp": "^1.12.16",
     "@eslint/eslintrc": "^3",
     "@gql.tada/cli-utils": "^1.6.3",
     "@graphql-codegen/cli": "^5.0.5",
