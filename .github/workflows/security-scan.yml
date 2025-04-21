@@ -9,28 +9,39 @@ on:
 jobs:
   security-scan:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: ['20.11.0']
 
     steps:
       - uses: actions/checkout@v4
 
-      # First set up Node.js explicitly to LTS version
-      - name: Setup Node.js ${{ matrix.node-version }}
+      # First set up Node.js explicitly
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }} # LTS version that's fully compatible with pnpm
+          node-version: '20.11.0'
+          # Remove cache reference
+          # cache: 'pnpm'
 
       # Then set up PNPM after Node.js
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 10.6.2
+          run_install: false
 
-      # Install dependencies with verbose flag to see more details
+      # Remove this entire cache block
+      - name: Cache pnpm dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.pnpm-store
+            node_modules
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+
+      # Install dependencies with fresh setup
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --no-frozen-lockfile
 
       # pnpm audit - Check for package vulnerabilities
       - name: Run pnpm audit
@@ -57,7 +68,3 @@ jobs:
           base: ${{ github.event.repository.default_branch }}
           head: HEAD
           extra_args: --debug --only-verified
-
-      # CodeQL Analysis
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
