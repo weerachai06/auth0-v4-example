@@ -1,7 +1,7 @@
 
 # Auth0 v4 with Next.js App Router
 
-This project is a monorepo containing multiple applications and packages. For detailed information about the Next.js application with Auth0 integration, please refer to the web application README.
+This project is a monorepo containing multiple applications and packages. For detailed information about the Next.js application with Auth0 integration, please refer to the [Web Application README](./apps/web/README.md).
 
 ## Repository Structure
 
