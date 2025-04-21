@@ -50,9 +50,9 @@ jobs:
       - name: Run pnpm audit
         run: pnpm audit --audit-level=high
 
-      # ESLint security plugins check
-      - name: Run ESLint
-        run: pnpm eslint . --ext .js,.jsx,.ts,.tsx
+      # Linting security plugins check
+      - name: Run Linting
+        run: pnpm lint
 
       # Dependency scanning
       - name: Run Snyk to check for vulnerabilities
