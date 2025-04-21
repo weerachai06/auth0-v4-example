@@ -17,20 +17,44 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
+      # Setup PNPM properly
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 10.6.2
+          run_install: false
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+
+      # Setup PNPM cache properly
+      - name: Get PNPM store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_ENV
+
+      - name: Setup PNPM cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
 
       - name: Install dependencies
         run: pnpm install
+
       # pnpm audit - Check for package vulnerabilities
       - name: Run pnpm audit
         run: pnpm audit --audit-level=high
 
       # ESLint security plugins check
       - name: Run ESLint
-        run: npx eslint . --ext .js,.jsx,.ts,.tsx
+        run: pnpm eslint . --ext .js,.jsx,.ts,.tsx
 
       # Dependency scanning
       - name: Run Snyk to check for vulnerabilities
@@ -50,5 +74,6 @@ jobs:
           head: HEAD
           extra_args: --debug --only-verified
 
+      # Update CodeQL Analysis to v3
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v2
+        uses: github/codeql-action/analyze@v3
