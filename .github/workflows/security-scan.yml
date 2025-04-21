@@ -17,6 +17,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
+          cache: 'none'
           node-version: 20.11.0 # LTS version that's fully compatible with pnpm
 
       # Then set up PNPM after Node.js
@@ -25,18 +26,6 @@ jobs:
         with:
           version: 10.6.2
           run_install: false
-
-      # Manually set up caching
-      - name: Cache pnpm dependencies
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.pnpm-store
-            node_modules
-          # Add a timestamp or version to force cache refresh
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}-v1
-          restore-keys: |
-            ${{ runner.os }}-pnpm-v1
 
       # Install dependencies with verbose flag to see more details
       - name: Install dependencies
