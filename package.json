@@ -1,34 +1,19 @@
 {
-  "name": "auth0-v4",
-  "version": "0.1.0",
+  "name": "my-turborepo",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "@auth0/nextjs-auth0": "^4.4.2",
-    "next": "15.3.0",
-    "next-intl": "^4.0.2",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "check-types": "turbo run check-types"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3",
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "15.3.0",
-    "eslint-config-prettier": "^10.1.2",
     "prettier": "^3.5.3",
-    "tailwindcss": "^4",
-    "typescript": "^5"
+    "turbo": "^2.5.0",
+    "typescript": "5.8.2"
   },
-  "packageManager": "pnpm@10.6.2",
+ "packageManager": "pnpm@10.6.2",
   "engines": {
     "node": "20.11.0",
     "pnpm": "10.6.2"
