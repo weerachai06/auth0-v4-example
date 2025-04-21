@@ -4,8 +4,12 @@ run-name: 'Security Scan for ${{ github.event_name }}(${{ github.ref_name }})'
 on:
   push:
     branches: [main]
+    paths:
+      - 'apps/web/**'
   pull_request:
     branches: [main]
+    paths:
+      - 'apps/web/**'
 
 jobs:
   security-scan:
