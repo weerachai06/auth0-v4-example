@@ -33,9 +33,10 @@ jobs:
           path: |
             ~/.pnpm-store
             node_modules
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          # Add a timestamp or version to force cache refresh
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}-v1
           restore-keys: |
-            ${{ runner.os }}-pnpm-
+            ${{ runner.os }}-pnpm-v1
 
       # Install dependencies with verbose flag to see more details
       - name: Install dependencies
