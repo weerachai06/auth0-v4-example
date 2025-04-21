@@ -5,6 +5,8 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
+    "dev:web": "pnpm dev --filter=./apps/web",
+    "build:web": "pnpm build --filter=./apps/web",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types"
   },
@@ -13,7 +15,7 @@
     "turbo": "^2.5.0",
     "typescript": "5.8.2"
   },
- "packageManager": "pnpm@10.6.2",
+  "packageManager": "pnpm@10.6.2",
   "engines": {
     "node": "20.11.0",
     "pnpm": "10.6.2"
