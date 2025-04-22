@@ -1,4 +1,4 @@
-name: "Auth0 NextJS CodeQL config"
+name: "Auth0 NextJS Monorepo CodeQL config"
 
 queries:
   - uses: security-and-quality
@@ -12,11 +12,48 @@ query-filters:
         - note
         - warning
 
+# Explicitly include only the paths we care about in the monorepo
+paths:
+  - 'apps/web/**'
+  - 'packages/**'
+  - '!packages/*/dist/**'
+
 paths-ignore:
+  # Dependencies
   - '**/node_modules/**'
+  - '**/.pnpm/**'
+  - '**/.next/**'
   - '**/dist/**'
   - '**/build/**'
+  
+  # Test files
   - '**/*.test.ts'
   - '**/*.test.tsx'
   - '**/*.spec.ts'
   - '**/*.spec.tsx'
+  - '**/tests/**'
+  - '**/mocks/**'
+  - '**/fixtures/**'
+  
+  # Generated files
+  - '**/generated/**'
+  - '**/*.generated.*'
+  - '**/*.graphql.ts'
+  
+  # Configuration files
+  - '**/*.config.js'
+  - '**/*.config.ts'
+  - '**/next.config.{js,ts}'
+  - '**/tailwind.config.{js,ts}'
+  - '**/postcss.config.{js,ts}'
+  
+  # Temporary and build artifacts
+  - '**/temp/**'
+  - '**/.turbo/**'
+  - '**/out/**'
+  - '**/coverage/**'
+  
+  # Docs and example files
+  - '**/docs/**'
+  - '**/examples/**'
+  - '**/*.md'
