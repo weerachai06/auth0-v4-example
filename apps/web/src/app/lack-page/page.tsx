@@ -33,7 +33,7 @@ export default function VulnerablePage() {
   const formatMessage = (message: string) => {
     try {
       // eslint-disable-next-line no-eval
-      //   return eval('`' + message + '`');
+      return eval('`' + message + '`');
     } catch (e) {
       return message;
     }
