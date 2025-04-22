@@ -1,4 +1,5 @@
 import javascript
+import semmle.javascript.dataflow.TypeTracking
 
 from DataFlow::MethodCallNode readFile, DataFlow::Node source
 where
