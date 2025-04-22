@@ -51,13 +51,6 @@ jobs:
           config-file: ./.github/codeql/codeql-config.yml
           queries: ./.github/codeql/custom-queries/javascript
 
-      # Initializes the CodeQL tools for scanning.
-      # - name: Initialize CodeQL
-      #   uses: github/codeql-action/init@v3
-      #   with:
-      #     languages: ${{ matrix.language }}
-      #     config-file: ./.github/codeql/codeql-config.yml
-
       # Build the project to ensure CodeQL has all the necessary files
       - name: Build project
         run: pnpm build
@@ -75,14 +68,3 @@ jobs:
         uses: github/codeql-action/analyze@v3
         with:
           category: '/language:${{ matrix.language }}'
-
-      # Autobuild attempts to build any compiled languages
-      # - name: Autobuild
-      #   uses: github/codeql-action/autobuild@v3
-
-      # # This step performs analysis AND uploads results automatically
-      # - name: Perform CodeQL Analysis
-      #   uses: github/codeql-action/analyze@v3
-      #   # You can specify a category if needed
-      #   # with:
-      #   #   category: ${{ matrix.language }}
