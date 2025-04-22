@@ -27,20 +27,54 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Initializes the CodeQL tools for scanning.
+      # Set up Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.11.0'
+
+      # Enable Corepack for package manager
+      - name: Enable Corepack
+        run: |
+          corepack enable
+          corepack prepare pnpm@10.6.2 --activate
+
+      # Install dependencies
+      - name: Install dependencies
+        run: pnpm install
+
+      # Initialize CodeQL with custom config
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
           languages: ${{ matrix.language }}
           config-file: ./.github/codeql/codeql-config.yml
+          queries: ./.github/codeql/custom-queries/javascript
 
-      # Autobuild attempts to build any compiled languages
-      - name: Autobuild
-        uses: github/codeql-action/autobuild@v3
+      # Initializes the CodeQL tools for scanning.
+      # - name: Initialize CodeQL
+      #   uses: github/codeql-action/init@v3
+      #   with:
+      #     languages: ${{ matrix.language }}
+      #     config-file: ./.github/codeql/codeql-config.yml
 
-      # This step performs analysis AND uploads results automatically
+      # Build the project to ensure CodeQL has all the necessary files
+      - name: Build project
+        run: pnpm build
+
+      # Perform the analysis
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
-        # You can specify a category if needed
-        # with:
-        #   category: ${{ matrix.language }}
+        with:
+          category: '/language:${{ matrix.language }}'
+
+      # Autobuild attempts to build any compiled languages
+      # - name: Autobuild
+      #   uses: github/codeql-action/autobuild@v3
+
+      # # This step performs analysis AND uploads results automatically
+      # - name: Perform CodeQL Analysis
+      #   uses: github/codeql-action/analyze@v3
+      #   # You can specify a category if needed
+      #   # with:
+      #   #   category: ${{ matrix.language }}
