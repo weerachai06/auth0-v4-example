@@ -63,6 +63,9 @@ jobs:
         with:
           args: --severity-threshold=high
 
+      - name: Run build
+        run: pnpm build
+
       # Secrets scanning
       - name: TruffleHog OSS
         uses: trufflesecurity/trufflehog@v3.46.3
