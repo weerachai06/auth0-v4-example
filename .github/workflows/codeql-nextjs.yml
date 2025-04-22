@@ -1,5 +1,5 @@
-name: 'CodeQL Analysis'
-run-name: 'CodeQL Analysis for ${{ github.event_name }} - ${{ github.ref_name }}'
+name: 'CodeQL With Nextjs'
+run-name: 'CodeQL With Nextjs for ${{ github.event_name }} - ${{ github.ref_name }}'
 
 on:
   push:
