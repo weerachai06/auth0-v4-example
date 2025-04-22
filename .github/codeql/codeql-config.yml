@@ -3,6 +3,8 @@ name: "Auth0 NextJS CodeQL config"
 queries:
   - uses: security-and-quality
   - uses: security-extended
+  - name: Custom Security Queries
+    uses: ./.github/codeql/custom-queries/javascript.qls
 
 query-filters:
   - exclude:
