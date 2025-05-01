@@ -1,32 +1,7 @@
 import { Auth0Client } from '@auth0/nextjs-auth0/server';
-import { SessionData } from '@auth0/nextjs-auth0/types';
 import { NextRequest, NextResponse } from 'next/server';
 
-/**
- * Now, we need to extend the Auth0Client class to add a custom refreshAccessToken method.
- * This method will force a refresh of the access token by setting the expiresAt property to 0.
- * @see {@link https://github.com/auth0/nextjs-auth0/issues/1884#issuecomment-2641728576}
- */
-class MyAuth0Client extends Auth0Client {
-  async refreshAccessToken(): Promise<{ token: string; expiresAt: number }> {
-    const existingSession = await this.getSession();
-    if (!existingSession) {
-      throw new Error('The user is not authenticated.');
-    }
-
-    const sessionToForceTokenRefresh = {
-      ...existingSession,
-      tokenSet: {
-        ...existingSession.tokenSet,
-        expiresAt: 0,
-      },
-    } satisfies SessionData;
-    await this.updateSession(sessionToForceTokenRefresh);
-    return this.getAccessToken();
-  }
-}
-
-export const auth0 = new MyAuth0Client({
+export const auth0 = new Auth0Client({
   clientId: process.env.AUTH0_CLIENT_ID,
   clientSecret: process.env.AUTH0_CLIENT_SECRET,
   appBaseUrl:
@@ -35,6 +10,11 @@ export const auth0 = new MyAuth0Client({
       : 'http://localhost:3000',
   secret: process.env.AUTH0_SECRET,
   domain: process.env.AUTH0_DOMAIN,
+  session: {
+    cookie: {
+      name: 'appSession',
+    },
+  },
   routes: {
     login: '/api/auth/login',
     callback: '/api/auth/callback',

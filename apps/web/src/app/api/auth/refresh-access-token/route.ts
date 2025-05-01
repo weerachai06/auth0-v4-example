@@ -3,7 +3,7 @@ import { auth0 } from '@/lib/auth0';
 export const GET = async () => {
   try {
     // Refresh the access token
-    const session = await auth0.refreshAccessToken();
+    const session = await auth0.getAccessToken({ refresh: true });
     console.log('Session:', session);
     return Response.json(session);
   } catch (error) {

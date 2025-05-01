@@ -1,6 +1,6 @@
 import createI18nMiddleware from 'next-intl/middleware';
 import { NextRequest, NextResponse } from 'next/server';
-import { auth0, authMiddleware } from './lib/auth0';
+import { authMiddleware } from './lib/auth0';
 import { chainMiddleware } from './middlewares/chain-middleware';
 
 // Supported languages
@@ -14,22 +14,23 @@ const intlMiddleware = createI18nMiddleware({
 });
 
 const protectedRouteMiddleware = async (request: NextRequest) => {
-  try {
-    const tokenSet = await auth0.getAccessToken();
-    if (tokenSet.token) {
-      // If the token is available, continue to the next middleware
-      return NextResponse.next();
-    }
-  } catch (error) {
-    console.error('Error getting access token:', error);
-    const pathname = request.nextUrl.pathname;
-    const searchParams = request.nextUrl.searchParams;
-    const returnTo = `${pathname}${searchParams}`;
-    // Redirect to the login page if the token is not available
-    return NextResponse.redirect(
-      new URL(`/api/auth/login?returnTo=${returnTo}`, process.env.NEXT_PUBLIC_BASE_URL)
-    );
-  }
+  console.log(request.nextUrl.pathname);
+  // try {
+  //   const tokenSet = await auth0.getAccessToken();
+  //   if (tokenSet.token) {
+  //     // If the token is available, continue to the next middleware
+  //     return NextResponse.next();
+  //   }
+  // } catch (error) {
+  //   console.error('Error getting access token:', error);
+  //   const pathname = request.nextUrl.pathname;
+  //   const searchParams = request.nextUrl.searchParams;
+  //   const returnTo = `${pathname}${searchParams}`;
+  //   // Redirect to the login page if the token is not available
+  //   return NextResponse.redirect(
+  //     new URL(`/api/auth/login?returnTo=${returnTo}`, process.env.NEXT_PUBLIC_BASE_URL)
+  //   );
+  // }
 
   return NextResponse.next();
 };
